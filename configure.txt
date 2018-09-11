@@ -1,0 +1,87 @@
+[Layer0]
+layer_name = Convolutional Layer # tf.nn.conv2d() in tensorflow
+input_dim = 128,                  # input dimension must be [batch, in_height, in_width, in_channels] e.g.[256, 6, 6, 1]
+filter_num = 32
+filter_size = 5,5               # the dimension of filter must be [filter_height, filter_width, in_channels, out_channels], out_channels == filter_num. e.g.[5, 5, 1, 32]
+stride = 2                      # must be [1, stride, stride, 1]
+padding = same                  # also can choose 'valid'
+data_format = NHWC              # also can choose 'NCHW'.
+acn = Relu                      # tanh,softmax,sigmoid
+
+[Layer1]
+layer_name = Pooling Layer	# tf.nn.max_pool() or tf.nn.avg_pool() in tensorflow
+input_dim = -1 			# generally as [batch, height, width, channels]. Read from convolutional layer
+pool_type = max 		# if max, use tf.nn.max_pool in tensorflow. if average, use tf.nn.avg_pool
+kernal_size = 2,2		# dimension in tensorflow must be [1, keneral_size, 1]
+pool_stride = 2			# stride must be [1, stride, stride, 1]
+padding = same 			# also can choose `valid`
+data_format = NHWC
+
+[Layer2]
+layer_name = Dense Layer	# tf.layers.dense()
+input_dim = -1 			# input
+units = 1024			# dimensionality of the output space
+acn = tf.nn.relu 		# also tf.nn.relu6, tf.nn.crelu, tf.nn.relu, tf.nn.selu, tf.nn.softplus, tf.nn.softsign, tf.sigmoid, tf.tanh. None is linear activation
+
+[Layer3]
+layer_name = Logits Layer       # output layer
+input_dim = -1			# input
+units = 10			# output dimension
+acn = softmax			# activation
+
+[Layer4]
+layer_name = Dropout Layer
+dropout = True			# tf.nn.dropout()
+dp_rate = 0.4
+
+[Layer5]
+layer_name = LSTM		# tf.contrib.rnn.BasicLSTMCell()		
+input_dim = -1
+time_steps = 28
+num_units = 128
+forget_bias = 1
+state_is_tuple = False
+acn = tanh			# default tanh
+if_multilstm = True 		# create multilayer LSTM, we can use tf.nn.rnn_cell.MultiRNNCell()
+layer_nums = 10 		# 10 layers of LSTM
+dtype = tf.float32		# tf.nn.dynamic_rnn()
+
+
+[Layer6]
+layer_name = BiLSTM 		
+input_dim = -1			# [batch_size, max_time, feature_size] for time_major = False
+max_time = 28
+num_units = 128			# the dimension of ht
+forget_bias = 1			# initialize bias of forget gate
+state_is_tuple = False
+acn = tanh
+dtype = tf.float32		# tf.nn.bidirectional_dynamic_rnn()
+
+[Layer7]
+layer_name = GRU		# tf.contrib.rnn.GRUCell()
+input_dim = -1			# 
+num_units = 128
+acn = tanh
+dtype = tf.float32		# tf.nn.dynamic_rnn()
+
+[Layer8]
+layer_name = BiGRU
+input_dim = -1
+num_units = 128
+acn = tanh			# tf.nn.bidirectional_dynamic_rnn()
+
+
+[train]
+opt_name = parameters
+learn_rate = 0.5		# learning rate
+optimizer = GradientDescent	# also Adam, RMSProp, AdagradDA, Adadelta, Adagrad, Momentum, SyncReplicas, Ftrl, ProximalAdagrad, ProximalGradientDescent
+iter = 100
+capacity = 5000
+fea_batch_size = 128
+trndir = /data5/yyliu/tf/train
+cvdir = /data5/yyliu/tf/test
+moddir = /home/yyliu/tftest/PythonSlv/data/mod
+gpu_num = 10
+
+
+

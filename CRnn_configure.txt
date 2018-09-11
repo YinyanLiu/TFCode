@@ -1,0 +1,112 @@
+[Layer0]
+layer_name = Cnn		# tf.nn.conv2d() in tensorflow
+fea_dim = 1,40                	# Here we just give the dimension of feature. For conv2d(), input dimension must be [batch, in_height, in_width, in_channels] e.g.[256, 6, 6, 1]
+filter_num = 32
+filter_size = 3,3               # the dimension of filter must be [filter_height, filter_width, in_channels, out_channels], out_channels == filter_num. e.g.[5, 5, 1, 32]
+stride = 2,2                    # must be [1, stride, stride, 1]
+ln = True			# to decide whether normalize batch data
+padding = same                  # also can choose 'valid'
+act = Relu                      # tanh,softmax,sigmoid
+
+
+[Layer1]
+layer_name = Cnn
+fea_dim = 32,20 		# the output of Layer0, check
+filter_num = 32
+filter_size = 3,3
+stride = 2,2
+ln = True	
+padding = same 
+act = Relu
+
+
+[Layer2]
+layer_name = Cnn
+fea_dim = 32,10			# the output of Layer1, check
+filter_num = 64
+filter_size = 3,3
+stride = 1,1
+ln = True	
+act = Relu			
+
+
+
+[Layer3]
+layer_name = GRU
+input_dim = 640			# the output of Layer2 [64x10], check CNN_FREQ_DIM[-1]*CNN_FILTER_NUMS[-1]
+output_dim = 300		# equal to GRU_HIDDEN_UNIT_NUM
+num_units = 300			#
+forget_bias = 0.95		#
+ln = True	 
+acn = Relu			# or tanh
+
+
+[Layer4]
+layer_name = GRU
+input_dim = 300			# the output of Layer3
+output_dim = 300		# equal to GRU_HIDDEN_UNIT_NUM
+num_units = 300			#
+forget_bias = 0.95		#
+ln = True	 
+acn = Relu			# or tanh
+
+
+
+[Layer5]
+layer_name = GRU
+input_dim = 300			# the output of Layer4
+output_dim = 300		# equal to GRU_HIDDEN_UNIT_NUM
+num_units = 300			#
+forget_bias = 0.95		#
+ln = True	 
+acn = Relu			# or tanh
+drop_rate = 0.9
+
+[Layer6]
+layer_name = GRU
+input_dim = 300			# the output of Layer5
+output_dim = 300		# equal to GRU_HIDDEN_UNIT_NUM
+num_units = 300			#
+forget_bias = 0.95		#
+ln = True	 
+acn = Relu			# or tanh
+drop_rate = 0.9
+
+[Layer7]
+layer_name = GRU
+input_dim = 300			# the output of Layer6
+output_dim = 300		# equal to GRU_HIDDEN_UNIT_NUM
+num_units = 300			#
+forget_bias = 0.95		#
+ln = True	 
+acn = Relu			# or tanh
+
+
+
+[Layer8]
+layer_name = LinearTransform
+input_dim = 300			# the output of Layer7
+output_dim = 2			# equal to GRU_HIDDEN_UNIT_NUM
+svd = False
+ln = False	 
+act = Softmax			# 
+
+
+
+[train]
+opt_name = parameters
+log_dir = /home/yyliu/tf/
+trn_dir = /data5/yyliu/tf/train
+cv_dir = /data5/yyliu/tf/test
+mod_dir = /home/yyliu/tf/model
+iter = 100
+gpu_num = 10
+batch_size = 128
+Capacity = 5000
+drop_rate = 0.9			# dropout 
+learn_rate = 0.5		# learning rate
+loss = crossentropy		# or MSE
+optimizer = GradientDescent	# also Adam, RMSProp, AdagradDA, Adadelta, Adagrad, Momentum, SyncReplicas, Ftrl, ProximalAdagrad, ProximalGradientDescent
+
+
+
