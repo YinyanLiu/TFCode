@@ -2,12 +2,15 @@
 #
 # config = configparser.ConfigParser()
 #
-# config.read('configTest.txt')
+# config.read('CRnn_configure.txt')
 #
 # # int
-# CNN_LAYER_NUM = config.getint('CNN', 'layer_num')
-# print('cnn_layer_num:', CNN_LAYER_NUM)
+# LAYER_NUMs = config.get('Layer5', 'layer_name')
+# print('cnn_layer_num:', LAYER_NUMs)
 #
+# # array
+# OUTPUT_DIM = [int(_) for _ in config.get('Layer0','input_dim').split(',')][0]
+# print(OUTPUT_DIM)
 # # array
 # CNN_OUTPUT_DIM_FREQ = [int(_) for _ in config.get('CNN', 'output_dim_freq').split(',')]
 # print('cnn_output_dim_freq:', CNN_OUTPUT_DIM_FREQ[1])
@@ -20,16 +23,6 @@
 # Linear_svd = config.getboolean('Linear', 'svd')
 # print('Linear_svd: ', Linear_svd)
 
+import fst
 
-#!/usr/bin/env python
-#-*- coding:utf-8 -*-
-a = u'🔟'
-print(a)
-print(type(a))
 
-b = a.encode('utf-8')
-print(type(b))
-print(b)
-
-d = int.from_bytes(b, 16)
-print(d)

@@ -102,7 +102,8 @@ def average_gradients(tower_grads):
         v = grad_and_vars[0][1] # 变量名，因为多个GPU参数是共享的，只取第一个[0]就行
         # print('v',v)
         grad_and_var = (grad, v)
-        # print('grad_and_var: ', grad_and_var)
+
+        print('grad_and_var: ', grad_and_var)
         # corresponding variables and gradients
         avg_grads.append(grad_and_var)
 

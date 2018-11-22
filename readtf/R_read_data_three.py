@@ -173,13 +173,15 @@ def read_dataset(tfrecord_path=tfrecord_path):
     # 声明阅读器
     dataset = tf.data.TFRecordDataset(tfrecord_path)
     # 建立解析函数，其中num_parallel_calls指定并行线程数
-    new_dataset = dataset.apply(tf.contrib.data.map_and_batch(
-        map_func=_parse_function, batch_size=2))
+    new_dataset = dataset.map(_parse_function, num_parallel_calls=4)
     # 打乱样本顺序
     shuffle_dataset = new_dataset.shuffle(buffer_size=20000)
-    new_dataset = new_dataset.repeat(10)  # 设置epoch次数为10
+    # 设置epoch次数为10，这里需要注意的是目前看来只支持先shuffle再repeat的方式
+    repeat_dataset = shuffle_dataset.repeat(10)
+    # batch输出
+    batch_dataset = repeat_dataset.batch(2)
     # 数据提前进入队列
-    prefetch_dataset = new_dataset.prefetch(2000)
+    prefetch_dataset = batch_dataset.prefetch(2000)
     # 建立迭代器
     iterator = prefetch_dataset.make_one_shot_iterator()
     # 获得下一个样本
@@ -216,8 +218,8 @@ with tf.Session() as sess:
         X2, Y2 = sess.run([x2_samples, y2_labels])
         print('X2: ', X2, 'Y2: ', Y2)
         # Dataset读取数据
-        print('dataset:', sess.run([next_element['sample'],
-                                    next_element['label']]))
+        a = sess.run([next_element['sample'], next_element['label']])
+        print('dataset:', a[0].shape)
 
     coord.request_stop()
     coord.join(threads)

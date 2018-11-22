@@ -1,9 +1,10 @@
 [Layer0]
-layer_name = Convolutional Layer # tf.nn.conv2d() in tensorflow
-input_dim = 128,                  # input dimension must be [batch, in_height, in_width, in_channels] e.g.[256, 6, 6, 1]
-filter_num = 32
-filter_size = 5,5               # the dimension of filter must be [filter_height, filter_width, in_channels, out_channels], out_channels == filter_num. e.g.[5, 5, 1, 32]
-stride = 2                      # must be [1, stride, stride, 1]
+layer_name = Cnn		# tf.nn.conv2d() in tensorflow
+fea_dim = 40
+input_channels = 1              # input dimension must be [batch, in_time, in_freq, in_channels] e.g.[256, 6, 6, 1]
+filter_nums = 32		# this refers the output_channel of cnn
+filter_size = 5,5               # the dimension of filter must be [filter_time, filter_freq, in_channels, out_channels]
+stride = 2,2                    # must be [1, stride_time, stride_freq, 1]
 padding = same                  # also can choose 'valid'
 data_format = NHWC              # also can choose 'NCHW'.
 acn = Relu                      # tanh,softmax,sigmoid
